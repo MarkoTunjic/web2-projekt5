@@ -24,6 +24,8 @@
         const captureButton = document.getElementById('capture');
         const convertButton = document.getElementById('convert');
         const fileInput = document.getElementById('file-input');
+        var drag = false;
+        var lastDot;
         var image;
 
         const constraints = {
@@ -44,11 +46,12 @@
         captureButton.addEventListener('click', () => {
             // Draw the video frame to the canvas.
             context.drawImage(player, 0, 0, canvas.width, canvas.height);
-            image = context.getImageData(0, 0, canvas.width, canvas.height);
+
             convertButton.disabled = false;
         });
 
         convertButton.addEventListener('click', () => {
+            image = context.getImageData(0, 0, canvas.width, canvas.height);
             var doc = new jsPDF();
 
             var pageWidth = doc.internal.pageSize.getWidth() - 20;
@@ -88,7 +91,32 @@
             captureButton.remove();
         }
 
-        navigator.serviceWorker.register("./js/sw.js");
+        navigator.serviceWorker.register("./sw.js");
+
+        canvas.addEventListener('mousedown', function(event) {
+            drag = true;
+            lastDot = {
+                x: event.offsetX,
+                y: event.offsetY
+            };
+        });
+
+        canvas.addEventListener('mouseup', function(event) {
+            drag = false;
+        });
+        canvas.addEventListener('mousemove', function(event) {
+            if (drag) {
+                context.beginPath();
+                context.moveTo(lastDot.x, lastDot.y);
+                context.lineTo(event.offsetX, event.offsetY);
+                context.strokeStyle = '#ff0000';
+                context.stroke();
+                lastDot = {
+                    x: event.offsetX,
+                    y: event.offsetY
+                };
+            }
+        });
     </script>
 </body>
 

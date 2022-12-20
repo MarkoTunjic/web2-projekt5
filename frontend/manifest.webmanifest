@@ -2,7 +2,7 @@
     "$schema": "https://json.schemastore.org/web-manifest-combined.json",
     "name": "Web2-projekt6",
     "short_name": "w2p6",
-    "start_url": "/index.html",
+    "start_url": "./",
     "display": "fullscreen",
     "background_color": "#778a35",
     "description": "A application for converting images to pdf",
