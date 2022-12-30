@@ -1,3 +1,4 @@
+import { entries, del } from "https://cdn.jsdelivr.net/npm/idb-keyval@6/+esm"
 const filesToCache = [
     "manifest.webmanifest",
     "index.html",
@@ -24,6 +25,7 @@ self.addEventListener("install", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
+    console.log("here3");
     event.respondWith(
         caches
         .match(event.request)
@@ -46,3 +48,29 @@ self.addEventListener("fetch", (event) => {
         })
     );
 });
+
+self.addEventListener("sync", function(event) {
+    console.log("here1")
+    if (event.tag === "sync-counter") {
+        event.waitUntil(syncCounter());
+    }
+});
+let syncCounter = async function() {
+    console.log("here2")
+    entries().then((entries) => {
+        entries.forEach((entry) => {
+            let value = entry[1]; // Each entry is an array of [key, value].
+            console.log(entry);
+            fetch("http://localhost:8080/generatedDocuments/" + value.counter, {
+                method: "GET"
+            }).then(function(res) {
+                if (res.ok) {
+                    res.json().then(function(data) {
+                        document.getElementById('counter').innerHTML = data;
+                        del(1);
+                    });
+                } else { console.log(res); }
+            }).catch(function(error) { console.log(error); });
+        });
+    });
+};
