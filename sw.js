@@ -15,7 +15,6 @@ const filesToCache = [
 const staticCacheName = "static-cache-v1";
 
 self.addEventListener("install", (event) => {
-    console.log("Attempting to install service worker and cache static assets");
     event.waitUntil(
         caches.open(staticCacheName).then((cache) => {
             return cache.addAll(filesToCache);
@@ -24,7 +23,6 @@ self.addEventListener("install", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-    console.log("here3");
     event.respondWith(
         caches
         .match(event.request)
