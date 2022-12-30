@@ -1,6 +1,3 @@
-import {
-    set
-} from "https://cdn.jsdelivr.net/npm/idb-keyval@6/+esm"
 window.jsPDF = window.jspdf.jsPDF;
 const player = document.getElementById('player');
 const canvas = document.getElementById('canvas');
@@ -48,15 +45,8 @@ convertButton.addEventListener('click', () => {
 
     doc.addImage(image, 'png', 10, 10, pageWidth, image.height * scaleFactor, 'image');
     doc.save("image.pdf");
-    set(id, {
-        counter: ++documentCounter
-    });
 
     counter.innerHTML = documentCounter;
-    navigator.serviceWorker.ready.then(registration => {
-        registration.sync.register("sync-counter");
-        console.log("here")
-    });
 });
 
 var errorCallback = function(e) {
